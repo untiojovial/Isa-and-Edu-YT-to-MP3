@@ -16,13 +16,27 @@ Los MP3 se guardan en la carpeta [`outputs/`](outputs).
    ```
    Si no tenés Python, descargalo de https://www.python.org/downloads/
 
+   > **Windows:** el comando se llama `python`, no `python3` (si escribís
+   > `python3` Windows abre la Microsoft Store en vez de ejecutar Python).
+   > Usá `python --version` y, más adelante, `python main.py` en todos los
+   > pasos de esta guía.
+
 2. **ffmpeg** (necesario para convertir el audio a MP3).
-   - **Windows:** descargalo de https://www.gyan.dev/ffmpeg/builds/ (build
-     "essentials"), descomprimilo, y agregá la carpeta `bin` al PATH del
-     sistema. Otra opción más simple si tenés `winget`:
-     ```bash
+   - **Windows:** la forma más simple es con `winget` (ya viene instalado en
+     Windows 10/11) desde PowerShell:
+     ```powershell
      winget install ffmpeg
      ```
+     También podés descargarlo manualmente de
+     https://www.gyan.dev/ffmpeg/builds/ (build "essentials"), descomprimirlo
+     y agregar la carpeta `bin` al PATH del sistema.
+
+     ⚠️ **Importante:** después de instalar ffmpeg con `winget`, **cerrá la
+     ventana de PowerShell y abrí una nueva** (o reiniciá la terminal) antes
+     de seguir. `winget` agrega ffmpeg al PATH, pero una terminal ya abierta
+     no se entera del cambio, así que si seguís usando la misma ventana el
+     script va a fallar diciendo que no encuentra `ffmpeg`/`ffprobe` aunque
+     ya esté instalado.
    - **macOS** (con [Homebrew](https://brew.sh)):
      ```bash
      brew install ffmpeg
@@ -31,7 +45,7 @@ Los MP3 se guardan en la carpeta [`outputs/`](outputs).
      ```bash
      sudo apt update && sudo apt install ffmpeg
      ```
-   Para confirmar que quedó instalado:
+   Para confirmar que quedó instalado (en una terminal nueva):
    ```bash
    ffmpeg -version
    ```
@@ -57,10 +71,10 @@ Los MP3 se guardan en la carpeta [`outputs/`](outputs).
 
 ## Uso
 
-Ejecutá el script:
+Ejecutá el script (en Windows usá `python`; en macOS/Linux, `python3`):
 
 ```bash
-python3 main.py
+python3 main.py        # Windows: python main.py
 ```
 
 Te va a pedir el link del video:
@@ -72,7 +86,7 @@ Pega el link de YouTube: https://www.youtube.com/watch?v=CrDcSDJYddM
 También podés pasar el link directamente como argumento, sin que te lo pida:
 
 ```bash
-python3 main.py "https://www.youtube.com/watch?v=CrDcSDJYddM"
+python3 main.py "https://www.youtube.com/watch?v=CrDcSDJYddM"     # Windows: python
 ```
 
 Cuando termine vas a ver:
@@ -98,14 +112,26 @@ como nombre de archivo.
 
 ## Solución de problemas
 
+- **Windows: `Python was not found; run without arguments to install from
+  the Microsoft Store...`**
+  Estás usando `python3`. En Windows el comando es `python` (sin el 3):
+  ```powershell
+  python main.py "TU_LINK"
+  ```
+
 - **`ModuleNotFoundError: No module named 'yt_dlp'`**
   No corriste `pip install -r requirements.txt`, o lo corriste en un entorno
   virtual distinto al que estás usando para ejecutar `main.py`.
 
-- **`FileNotFoundError` / errores relacionados con `ffmpeg` durante la
-  conversión**
-  ffmpeg no está instalado o no está en el PATH. Revisá la sección de
-  Requisitos y corré `ffmpeg -version` para confirmar.
+- **`ERROR: Postprocessing: ffprobe and ffmpeg not found. Please install or
+  provide the path using --ffmpeg-location`**
+  ffmpeg no está instalado, o lo instalaste recién y la terminal donde estás
+  corriendo el script todavía no "ve" el PATH actualizado. Esto pasa mucho
+  en Windows después de `winget install ffmpeg`: **cerrá esa ventana de
+  PowerShell y abrí una nueva** (no hace falta reiniciar Windows), entrá de
+  nuevo a la carpeta del proyecto con `cd Isa-and-Edu-YT-to-MP3` y corré el
+  script otra vez. Confirmá con `ffmpeg -version` en la ventana nueva antes
+  de reintentar.
 
 - **`HTTP Error 403: Forbidden` o "Sign in to confirm you're not a bot"**
   YouTube cambia seguido sus protecciones anti-bot y a veces bloquea
