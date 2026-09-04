@@ -1,0 +1,8 @@
+outputs/*.mp3
+outputs/*.webm
+outputs/*.m4a
+outputs/*.part
+__pycache__/
+*.pyc
+venv/
+.venv/
